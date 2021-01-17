@@ -10,5 +10,10 @@ SECTIONS
     .text : { *(.text*) } > rom
     .rodata : { *(.rodata*) } > rom
     .bss : { *(.bss*) } > ram
+
+    /DISCARD/ :
+    {
+        *(.ARM.exidx)
+    }
 }
 

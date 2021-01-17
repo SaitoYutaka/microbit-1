@@ -2,8 +2,9 @@
 ARMGNU = arm-none-eabi
 #ARMGNU = arm-linux-gnueabi
 
-AOPS = --warn --fatal-warnings -mcpu=cortex-m0
-COPS = -Wall -Werror -O2 -nostdlib -nostartfiles -ffreestanding  -mcpu=cortex-m0
+# AOPS = --warn --fatal-warnings -mcpu=cortex-m0
+AOPS = -nostdlib -target armv6-none-none-eabi
+COPS = -Wall -Werror -O2 -nostdlib -ffreestanding -target armv6-none-none-eabi
 
 all : notmain.bin
 
@@ -16,14 +17,14 @@ clean:
 #---------------------------------
 
 flash.o : flash.s
-	$(ARMGNU)-as $(AOPS) flash.s -o flash.o
+	clang $(AOPS) -c flash.s
 
 notmain.o : notmain.c
-	$(ARMGNU)-gcc $(COPS) -mthumb -c notmain.c -o notmain.o
+	clang $(COPS) -mthumb -c notmain.c -o notmain.o
 
 notmain.bin : flash.ld flash.o notmain.o
-	$(ARMGNU)-ld -o notmain.elf -T flash.ld flash.o notmain.o
-	$(ARMGNU)-objdump -D notmain.elf > notmain.list
-	$(ARMGNU)-objcopy notmain.elf notmain.bin -O binary
+	clang -fno-exceptions -fno-unwind-tables -nostdlib -target armv6-none-none-eabi -o notmain.elf -T flash.ld flash.o notmain.o
+	llvm-objdump -D notmain.elf > notmain.list
+	llvm-objcopy notmain.elf notmain.bin -O binary
 
 

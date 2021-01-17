@@ -1,6 +1,6 @@
 
 
-.cpu cortex-m0
+@ .cpu cortex-m0
 .thumb
 
 
